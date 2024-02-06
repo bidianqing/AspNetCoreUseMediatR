@@ -7,17 +7,17 @@ namespace AspNetCoreUseMediatR.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class HomeController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<HomeController> _logger;
         private readonly IMediator _mediator;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IMediator mediator)
+        public HomeController(ILogger<HomeController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
@@ -26,10 +26,10 @@ namespace AspNetCoreUseMediatR.Controllers
         [HttpGet]
         public async Task<IEnumerable<WeatherForecast>> Get()
         {
-            //var result = await _mediator.Send(new Ping());
-            //_logger.LogInformation(result);
+            var result = await _mediator.Send(new Ping());
+            _logger.LogInformation(result);
 
-            //await _mediator.Send(new OneWay());
+            await _mediator.Send(new OneWay());
 
             await _mediator.Publish(new OrderCancelledDomainEvent(1));
 

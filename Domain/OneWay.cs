@@ -7,9 +7,9 @@ namespace Domain
 
     }
 
-    public class OneWayHandler : AsyncRequestHandler<OneWay>
+    public class OneWayHandler : IRequestHandler<OneWay>
     {
-        protected override async Task Handle(OneWay request, CancellationToken cancellationToken)
+        public async Task Handle(OneWay request, CancellationToken cancellationToken)
         {
             await Console.Out.WriteLineAsync("OneWayHandler");
         }
