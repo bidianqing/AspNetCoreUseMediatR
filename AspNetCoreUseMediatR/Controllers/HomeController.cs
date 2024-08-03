@@ -1,7 +1,9 @@
 using Domain;
+using Domain.Commands.GitHub;
 using Domain.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Nodes;
 
 namespace AspNetCoreUseMediatR.Controllers
 {
@@ -9,11 +11,6 @@ namespace AspNetCoreUseMediatR.Controllers
     [Route("[controller]")]
     public class HomeController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<HomeController> _logger;
         private readonly IMediator _mediator;
 
@@ -24,7 +21,7 @@ namespace AspNetCoreUseMediatR.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<WeatherForecast>> Get()
+        public async Task<JsonNode> Get()
         {
             var result = await _mediator.Send(new Ping());
             _logger.LogInformation(result);
@@ -33,13 +30,12 @@ namespace AspNetCoreUseMediatR.Controllers
 
             await _mediator.Publish(new OrderCancelledDomainEvent(1));
 
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            var user = await _mediator.Send(new GetUserCommand
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                AccountId = "bidianqing"
+            });
+
+            return user;
         }
     }
 }
