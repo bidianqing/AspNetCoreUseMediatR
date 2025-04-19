@@ -1,8 +1,5 @@
-using Domain.Commands.GitHub;
-using Infrastructure.GitHub;
-using MediatR;
+using MediatR.NotificationPublishers;
 using System.Reflection;
-using System.Text.Json.Nodes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +8,9 @@ builder.Services.AddControllers();
 builder.Services.AddMediatR(xfg =>
 {
     xfg.RegisterServicesFromAssemblies(Assembly.Load("Domain"), Assembly.Load("AspNetCoreUseMediatR"), Assembly.Load("Infrastructure"));
+
+    // https://www.milanjovanovic.tech/blog/building-a-better-mediatr-publisher-with-channels-and-why-you-shouldnt
+    xfg.NotificationPublisherType = typeof(TaskWhenAllPublisher);
 });
 
 builder.Services.AddHttpClient("github", client =>
